@@ -1,0 +1,15 @@
+name: "Copy khulnasoft demos"
+
+inputs:
+  khulnasoft_version:
+    description: URL to the khulnasoft version"
+    required: true
+  khulnasoft_client_version:
+    description: "URL to the khulnasoft client version"
+    required: true
+  config_path:
+    description: "Path to the config file"
+
+runs:
+  using: "node20"
+  main: "dist/index.js"

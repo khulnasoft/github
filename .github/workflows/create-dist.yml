@@ -1,0 +1,33 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9.1
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - name: install dependencies
+        run: pnpm i --frozen-lockfile
+      - name: build packages
+        run: pnpm build
+      - name: copy action.yml and dist files to actions folder
+        run: node after_build.js
+      - name: Commit and push files
+        run: |
+          git config --global user.email "khulnasoft-bot@users.noreply.github.com"
+          git config --global user.name "khulnasoft-bot"
+          git add .
+          git commit --allow-empty -m "Build actions"
+          git push
