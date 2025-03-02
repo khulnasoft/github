@@ -23,6 +23,6 @@
 		"@types/node": "^18.14.5",
 		"recursive-readdir": "^2.2.3",
 		"typescript": "^4.9.5",
-		"vite": "^4.4.9"
+		"vite": "^4.5.6"
 	}
 }
