@@ -40,7 +40,7 @@ import require$$0$4 from "util";
 import Stream from "stream";
 import require$$7 from "buffer";
 import require$$8 from "querystring";
-import require$$13 from "stream/web";
+import require$$14 from "stream/web";
 import require$$0$8 from "node:stream";
 import require$$1$3 from "node:util";
 import require$$0$7 from "node:events";
@@ -1213,7 +1213,7 @@ async function* convertIterableToBuffer(iterable) {
 let ReadableStream;
 function ReadableStreamFrom$1(iterable) {
   if (!ReadableStream) {
-    ReadableStream = require$$13.ReadableStream;
+    ReadableStream = require$$14.ReadableStream;
   }
   if (ReadableStream.from) {
     return ReadableStream.from(convertIterableToBuffer(iterable));
@@ -4138,7 +4138,7 @@ function requireUtil$4() {
   let ReadableStream2 = globalThis.ReadableStream;
   function isReadableStreamLike(stream2) {
     if (!ReadableStream2) {
-      ReadableStream2 = require$$13.ReadableStream;
+      ReadableStream2 = require$$14.ReadableStream;
     }
     return stream2 instanceof ReadableStream2 || stream2[Symbol.toStringTag] === "ReadableStream" && typeof stream2.tee === "function";
   }
@@ -5294,13 +5294,20 @@ function requireBody() {
   const { isUint8Array, isArrayBuffer } = require$$5;
   const { File: UndiciFile } = requireFile$1();
   const { parseMIMEType, serializeAMimeType } = requireDataURL();
+  let random;
+  try {
+    const crypto2 = require("node:crypto");
+    random = (max) => crypto2.randomInt(0, max);
+  } catch {
+    random = (max) => Math.floor(Math.random(max));
+  }
   let ReadableStream2 = globalThis.ReadableStream;
   const File = NativeFile ?? UndiciFile;
   const textEncoder = new TextEncoder();
   const textDecoder = new TextDecoder();
   function extractBody2(object, keepalive = false) {
     if (!ReadableStream2) {
-      ReadableStream2 = require$$13.ReadableStream;
+      ReadableStream2 = require$$14.ReadableStream;
     }
     let stream2 = null;
     if (object instanceof ReadableStream2) {
@@ -5336,7 +5343,7 @@ function requireBody() {
     } else if (ArrayBuffer.isView(object)) {
       source = new Uint8Array(object.buffer.slice(object.byteOffset, object.byteOffset + object.byteLength));
     } else if (util2.isFormDataLike(object)) {
-      const boundary = `----formdata-undici-0${`${Math.floor(Math.random() * 1e11)}`.padStart(11, "0")}`;
+      const boundary = `----formdata-undici-0${`${random(1e11)}`.padStart(11, "0")}`;
       const prefix = `--${boundary}\r
 Content-Disposition: form-data`;
       /*! formdata-polyfill. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
@@ -5434,7 +5441,7 @@ Content-Type: ${value2.type || "application/octet-stream"}\r
   }
   function safelyExtractBody(object, keepalive = false) {
     if (!ReadableStream2) {
-      ReadableStream2 = require$$13.ReadableStream;
+      ReadableStream2 = require$$14.ReadableStream;
     }
     if (object instanceof ReadableStream2) {
       assert(!util2.isDisturbed(object), "The body has already been consumed.");
@@ -11749,7 +11756,7 @@ function requireResponse() {
   const { kHeadersList, kConstruct } = symbols$4;
   const assert = require$$0$5;
   const { types: types2 } = require$$0$4;
-  const ReadableStream2 = globalThis.ReadableStream || require$$13.ReadableStream;
+  const ReadableStream2 = globalThis.ReadableStream || require$$14.ReadableStream;
   const textEncoder = new TextEncoder("utf-8");
   class Response2 {
     // Creates network error Response.
@@ -12410,7 +12417,7 @@ function requireRequest() {
           );
         }
         if (!TransformStream) {
-          TransformStream = require$$13.TransformStream;
+          TransformStream = require$$14.TransformStream;
         }
         const identityTransform = new TransformStream();
         inputBody.stream.pipeThrough(identityTransform);
@@ -12802,7 +12809,7 @@ function requireFetch() {
   const { Readable: Readable2, pipeline: pipeline2 } = Stream;
   const { addAbortListener: addAbortListener2, isErrored: isErrored2, isReadable: isReadable2, nodeMajor: nodeMajor2, nodeMinor: nodeMinor2 } = util$m;
   const { dataURLProcessor, serializeAMimeType } = requireDataURL();
-  const { TransformStream } = require$$13;
+  const { TransformStream } = require$$14;
   const { getGlobalDispatcher: getGlobalDispatcher2 } = global$1;
   const { webidl } = requireWebidl();
   const { STATUS_CODES: STATUS_CODES2 } = require$$2$1;
@@ -13553,7 +13560,7 @@ function requireFetch() {
       fetchParams.controller.abort(reason);
     };
     if (!ReadableStream2) {
-      ReadableStream2 = require$$13.ReadableStream;
+      ReadableStream2 = require$$14.ReadableStream;
     }
     const stream2 = new ReadableStream2(
       {
